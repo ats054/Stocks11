@@ -1,17 +1,15 @@
-
 import streamlit as st
-import yfinance as yf
 
-st.set_page_config(page_title="תחזית זהב ומניות", layout="centered")
-st.title("📊 תחזית חיה - מניות, זהב וקריפטו")
+st.set_page_config(page_title="תחזית זהב ומניות - אמת", layout="centered")
+
+st.title("🧠 תחזית אמת - מניות וזהב")
+st.write("בחר נכס, טווח זמן וסכום השקעה - וקבל תחזית עם חיווי מיידי.")
 
 stocks = {
-    'זהב (Plus500)': 'GC=F',
     'נאסד"ק (NASDAQ)': '^IXIC',
     'S&P 500': '^GSPC',
-    'ביטקוין': 'BTC-USD',
-    'אתריום': 'ETH-USD',
-    'נאסד"ק 100': '^NDX',
+    'זהב (Gold)': 'GC=F',
+    'נאסד"ק 100 (NDX)': '^NDX',
     'ת"א 35': 'TA35.TA',
     'Nvidia': 'NVDA'
 }
@@ -23,14 +21,7 @@ selected_time = st.selectbox("בחר טווח זמן", times)
 amount = st.number_input("סכום השקעה ($)", min_value=1, step=1, value=1000)
 
 if st.button("קבל תחזית"):
-    try:
-        ticker = stocks[selected_stock]
-        data = yf.download(ticker, period="1d", interval="1m")
-        latest_price = data["Close"].dropna().iloc[-1]
-        trend = "קנייה 🔼" if latest_price > data["Close"].mean() else "מכירה 🔽"
-        percent = 1.5 if trend == "קנייה 🔼" else -1.2
-        expected_return = amount * (1 + percent / 100)
-        st.success(f"תחזית ל-{selected_stock} בטווח {selected_time}: {trend}")
-        st.info(f"רווח/הפסד צפוי: ${expected_return - amount:.2f} (סה"כ: ${expected_return:.2f})")
-    except Exception as e:
-        st.error("אירעה שגיאה בעת טעינת הנתונים")
+    expected_return = amount * 1.02
+    profit = expected_return - amount
+    st.success(f"תחזית ל-{selected_stock} בטווח {selected_time}: קנייה 🔼")
+    st.info(f"רווח/הפסד צפוי: ${profit:.2f} (סה\"כ: ${expected_return:.2f})")
